@@ -1,0 +1,154 @@
+/* Design tokens and global element styles. */
+
+:root {
+  --colour-ink: #142e1e;
+  --colour-ink-soft: #4a6352;
+  --colour-page: #ffffff;
+  --colour-surface: #ffffff;
+  --colour-purple: #5b3e86;
+  --colour-purple-dark: #4a3170;
+  --colour-purple-light: #7a5aa3;
+  --colour-pink: #ffc700;
+  --colour-lime: #ffc700;
+  --colour-cyan: #5b3e86;
+  --colour-amber: #ffc700;
+  --colour-danger: #5b3e86;
+  --colour-success: #142e1e;
+  --colour-border: #e8e8e8;
+  --shadow-card: 0 18px 40px rgba(20, 46, 30, 0.12);
+  --shadow-hard: 6px 6px 0 var(--colour-ink);
+  --radius-lg: 22px;
+  --radius-md: 14px;
+  --font-display: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--colour-ink);
+  background-color: var(--colour-page);
+  background-image: radial-gradient(circle at 12% 8%, rgba(255, 199, 0, 0.16), transparent 45%),
+    radial-gradient(circle at 88% 0%, rgba(91, 62, 134, 0.13), transparent 40%);
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  margin: 0 0 0.5rem 0;
+  line-height: 1.1;
+}
+
+p {
+  line-height: 1.6;
+}
+
+a {
+  color: inherit;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem 1.25rem;
+  flex: 1;
+}
+
+.page-title {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+}
+
+.page-subtitle {
+  color: var(--colour-ink-soft);
+  margin-top: 0;
+}
+
+.card-surface {
+  background: var(--colour-surface);
+  border: 3px solid var(--colour-ink);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 1.5rem;
+}
+
+.text-centre {
+  text-align: center;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.form-error {
+  color: var(--colour-danger);
+  font-size: 0.85rem;
+  margin: 0.25rem 0 0 0;
+  font-weight: 600;
+}
+
+.badge {
+  display: inline-block;
+  background: var(--colour-lime);
+  border: 2px solid var(--colour-ink);
+  border-radius: 999px;
+  padding: 0.2rem 0.85rem;
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.site-footer {
+  text-align: center;
+  padding: 1.5rem;
+  font-size: 0.8rem;
+  color: var(--colour-ink-soft);
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pulse-warning {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}

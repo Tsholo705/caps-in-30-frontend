@@ -1,0 +1,72 @@
+.app-button {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  border: 3px solid var(--colour-ink);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1.4rem;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  box-shadow: var(--shadow-hard);
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+  background: var(--colour-surface);
+  color: var(--colour-ink);
+}
+
+.app-button:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 3px 3px 0 var(--colour-ink);
+}
+
+.app-button:active {
+  transform: translate(6px, 6px);
+  box-shadow: 0 0 0 var(--colour-ink);
+}
+
+.app-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.app-button--primary {
+  background: var(--colour-purple);
+  color: #fff;
+}
+
+.app-button--accent {
+  background: var(--colour-pink);
+  color: #fff;
+}
+
+.app-button--success {
+  background: var(--colour-lime);
+  color: var(--colour-ink);
+}
+
+.app-button--ghost {
+  background: transparent;
+  box-shadow: none;
+}
+
+.app-button--ghost:hover {
+  background: #fff;
+  box-shadow: none;
+  transform: none;
+}
+
+.app-button--large {
+  font-size: 1.2rem;
+  padding: 1rem 2rem;
+  width: 100%;
+}
+
+.app-button--block {
+  width: 100%;
+}
