@@ -182,8 +182,6 @@ export function isTokenExpired() {
 
 
 // ---------- SOLO QUIZ (future: GET /api/questions) ----------
-const API_URL = "http://localhost:5172";
-
 export async function getQuestions(grade, subject, topic, howMany) {
   const params = new URLSearchParams({
     grade: Number(grade),
@@ -193,7 +191,7 @@ export async function getQuestions(grade, subject, topic, howMany) {
   });
 
   const response = await fetch(
-    `${API_URL}/api/questions?${params.toString()}`
+    `${API_BASE_URL}/questions?${params.toString()}`
   );
 
   if (!response.ok) {
