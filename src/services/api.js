@@ -168,7 +168,7 @@ export function isTokenExpired() {
 
     const payload = JSON.parse(atob(padded));
 
-    // A valid JWT should contain an expiry timestamp.
+    // A valid JWT should contain an expiry timestamp
     if (typeof payload.exp !== "number") {
       return true;
     }
