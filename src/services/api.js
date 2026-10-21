@@ -1,5 +1,4 @@
-const API_BASE_URL =
-  "https://capsin30-webapi-brgtara8cpbretbs.southafricanorth-01.azurewebsites.net/api";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const TOKEN_KEY = "caps30_token";
 
 const USERS_KEY = "caps30_users";
