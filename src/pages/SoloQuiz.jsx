@@ -17,19 +17,25 @@ export default function SoloQuiz() {
   const [secondsLeft, setSecondsLeft] = useState(30);
   const [ready, setReady] = useState(false);
 
-  // Makes sure we only finish the quiz once.
+  // Stores each answer immediately so the final result has the details.
+  const answersRef = useRef([]);
   const finishedRef = useRef(false);
+  const loadStartedRef = useRef(false);
 
-  // 1. Load the config the learner chose on the dashboard and fetch questions.
+  // 1. Load the learner's quiz configuration and questions.
   useEffect(
     function () {
       if (loading) return;
+
       if (!user) {
         navigate("/login");
         return;
       }
+      if (loadStartedRef.current) return;
+      loadStartedRef.current = true;
 
       const savedConfig = api.getQuizConfig();
+
       if (!savedConfig) {
         navigate("/dashboard");
         return;
@@ -38,6 +44,27 @@ export default function SoloQuiz() {
       setConfig(savedConfig);
       setSecondsLeft(savedConfig.seconds);
 
+      // A retry round supplies its questions through localStorage.
+      const retryData = localStorage.getItem("caps30_retry_questions");
+
+      if (retryData) {
+        localStorage.removeItem("caps30_retry_questions");
+
+        try {
+          const retryQuestions = JSON.parse(retryData);
+
+          if (Array.isArray(retryQuestions) && retryQuestions.length > 0) {
+            answersRef.current = [];
+            setQuestions(retryQuestions);
+            setReady(true);
+            return;
+          }
+        } catch (error) {
+          console.error("Could not load retry questions:", error);
+        }
+      }
+
+      // If this isn't a retry round, load a normal quiz.
       api
         .getQuestions(
           savedConfig.grade,
@@ -46,7 +73,13 @@ export default function SoloQuiz() {
           savedConfig.questionCount
         )
         .then(function (list) {
+          answersRef.current = [];
           setQuestions(list);
+          setReady(true);
+        })
+        .catch(function (error) {
+          console.error("Could not load questions:", error);
+          setQuestions([]);
           setReady(true);
         });
     },
@@ -78,13 +111,44 @@ export default function SoloQuiz() {
       if (!ready || !config || finishedRef.current) return;
 
       const timeIsUp = secondsLeft <= 0;
-      const allAnswered = questions.length > 0 && currentIndex >= questions.length;
+      const allAnswered =
+        questions.length > 0 && currentIndex >= questions.length;
+
       if (!timeIsUp && !allAnswered) return;
 
       finishedRef.current = true;
 
+      // Include every question the learner missed, including unanswered ones.
+      const wrongAnswers = questions
+        .map(function (question, questionIndex) {
+          const recordedAnswer = answersRef.current.find(function (answer) {
+            return answer.questionIndex === questionIndex;
+          });
+
+          if (recordedAnswer && recordedAnswer.isCorrect) {
+            return null;
+          }
+
+          const options = question.options ?? [];
+          const correctIndex = question.correctIndex;
+
+          return {
+            question,
+            questionText: question.text ?? "Question",
+            selectedAnswer: recordedAnswer
+              ? recordedAnswer.selectedAnswer
+              : null,
+            correctAnswer:
+              options[correctIndex] ?? "Correct answer unavailable",
+            unanswered: !recordedAnswer,
+          };
+        })
+        .filter(Boolean);
+
       const total = questions.length;
-      const percentage = total === 0 ? 0 : Math.round((correctCount / total) * 100);
+      const percentage =
+        total === 0 ? 0 : Math.round((correctCount / total) * 100);
+
       const result = {
         id: "run-" + Date.now(),
         date: new Date().toISOString(),
@@ -93,15 +157,17 @@ export default function SoloQuiz() {
         topic: config.topic,
         correct: correctCount,
         incorrect: total - correctCount,
-        total: total,
-        percentage: percentage,
+        total,
+        percentage,
         timeUsed: config.seconds - secondsLeft,
         answered: currentIndex,
+        wrongAnswers,
       };
 
       api.saveQuizResult(result);
 
-      api.addScoreToHistory(result)
+      api
+        .addScoreToHistory(result)
         .then(function () {
           navigate("/solo-results");
         })
@@ -110,16 +176,39 @@ export default function SoloQuiz() {
           navigate("/solo-results");
         });
     },
-    [secondsLeft, currentIndex, ready, config, questions.length, correctCount, navigate]
+    [
+      secondsLeft,
+      currentIndex,
+      ready,
+      config,
+      questions,
+      correctCount,
+      navigate,
+    ]
   );
 
+  // 4. Record the selected answer before moving to the next question.
   function handleAnswer(optionIndex) {
     const question = questions[currentIndex];
-    if (optionIndex === question.correctIndex) {
+
+    if (!question || finishedRef.current) return;
+
+    const options = question.options ?? [];
+    const isCorrect = optionIndex === question.correctIndex;
+
+    answersRef.current.push({
+      questionIndex: currentIndex,
+      selectedIndex: optionIndex,
+      selectedAnswer: options[optionIndex] ?? "Unknown answer",
+      isCorrect,
+    });
+
+    if (isCorrect) {
       setCorrectCount(function (previous) {
         return previous + 1;
       });
     }
+
     setCurrentIndex(function (previous) {
       return previous + 1;
     });
@@ -137,7 +226,9 @@ export default function SoloQuiz() {
     return (
       <div className="page quiz-empty card-surface">
         <h1>No questions yet</h1>
-        <p>We don't have prototype questions for that choice. Try another topic.</p>
+        <p>
+          We don't have prototype questions for that choice. Try another topic.
+        </p>
         <Button
           onClick={function () {
             navigate("/dashboard");
@@ -150,6 +241,7 @@ export default function SoloQuiz() {
   }
 
   const question = questions[currentIndex];
+
   if (!question) {
     return (
       <div className="page">
@@ -166,12 +258,17 @@ export default function SoloQuiz() {
         <span className="quiz-counter">
           Question {currentIndex + 1} of {questions.length}
         </span>
+
         <Timer secondsLeft={secondsLeft} warningAt={10} />
+
         <span className="quiz-score-pill">Score: {correctCount}</span>
       </div>
 
       <div className="quiz-progress-track">
-        <div className="quiz-progress-fill" style={{ width: progress + "%" }} />
+        <div
+          className="quiz-progress-fill"
+          style={{ width: progress + "%" }}
+        />
       </div>
 
       <QuizQuestion question={question} onAnswer={handleAnswer} />

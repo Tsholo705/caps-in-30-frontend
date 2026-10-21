@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import Footer from "./components/Footer.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import Header from "./components/Header.jsx";
 
@@ -31,26 +31,29 @@ export default function App() {
       <AuthProvider>
         <div className="app-shell">
           <Header />
+          <main>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/score-history" element={<ScoreHistory />} />
+              <Route path="/solo-quiz" element={<SoloQuiz />} />
+              <Route path="/solo-results" element={<SoloResults />} />
 
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/score-history" element={<ScoreHistory />} />
-            <Route path="/solo-quiz" element={<SoloQuiz />} />
-            <Route path="/solo-results" element={<SoloResults />} />
+              <Route path="/team/setup" element={<TeamSetup />} />
+              <Route path="/team/game" element={<TeamGame />} />
+              <Route path="/team/results" element={<TeamResults />} />
+              <Route
+                path="/team/scoreboard"
+                element={<TeamScoreboard />}
+              />
 
-            <Route path="/team/setup" element={<TeamSetup />} />
-            <Route path="/team/game" element={<TeamGame />} />
-            <Route path="/team/results" element={<TeamResults />} />
-            <Route
-              path="/team/scoreboard"
-              element={<TeamScoreboard />}
-            />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
+          <Footer />
 
-            <Route path="*" element={<NotFound />} />
-          </Routes>
         </div>
       </AuthProvider>
     </BrowserRouter>

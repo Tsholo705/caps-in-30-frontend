@@ -13,6 +13,7 @@ export default function Register() {
     email: "",
     password: "",
     grade: "7",
+    accessCode: "",
   });
   const [errors, setErrors] = useState({});
   const [banner, setBanner] = useState("");
@@ -33,14 +34,15 @@ export default function Register() {
     if (form.username.trim().length < 3) {
       found.username = "Username must be at least 3 characters.";
     }
-    if (!form.email.includes("@") || !form.email.includes(".")) {
-      found.email = "Please enter a valid email address.";
-    }
+
     if (form.password.length < 6) {
       found.password = "Password must be at least 6 characters.";
     }
     if (form.grade !== "7" && form.grade !== "8") {
       found.grade = "Choose Grade 7 or Grade 8.";
+    }
+    if (!form.accessCode.trim()) {
+      found.accessCode = "Please enter your access code.";
     }
 
     setErrors(found);
@@ -50,15 +52,28 @@ export default function Register() {
   function handleSubmit(event) {
     event.preventDefault();
     setBanner("");
+
     if (!validate()) return;
 
     setBusy(true);
-    register(form)
+
+    register({
+      ...form,
+      name: form.name.trim(),
+      username: form.username.trim(),
+      accessCode: form.accessCode.trim(),
+    })
       .then(function () {
-        navigate({ to: "/dashboard" });
+        navigate("/login", {
+          state: {
+            message: "Registration successful! Please log in with your username and password.",
+          },
+        });
       })
       .catch(function (err) {
-        setBanner(err.message);
+        setBanner(err.message || "Registration failed. Please try again.");
+      })
+      .finally(function () {
         setBusy(false);
       });
   }
@@ -69,7 +84,7 @@ export default function Register() {
       <p className="page-subtitle">Solo Mode saves your scores, so you need a quick account.</p>
 
       <form className="card-surface" onSubmit={handleSubmit} noValidate>
-        {banner ? <p className="form-banner-error">{banner}</p> : null}
+        {banner ? (<p className="form-banner-error">{banner}</p>) : null}
 
         <div className="form-field">
           <label className="form-label" htmlFor="reg-name">
@@ -99,22 +114,6 @@ export default function Register() {
             }}
           />
           {errors.username ? <p className="form-error">{errors.username}</p> : null}
-        </div>
-
-        <div className="form-field">
-          <label className="form-label" htmlFor="reg-email">
-            Email
-          </label>
-          <input
-            id="reg-email"
-            type="email"
-            className={errors.email ? "form-input form-input--invalid" : "form-input"}
-            value={form.email}
-            onChange={function (e) {
-              updateField("email", e.target.value);
-            }}
-          />
-          {errors.email ? <p className="form-error">{errors.email}</p> : null}
         </div>
 
         <div className="form-field">
@@ -150,6 +149,35 @@ export default function Register() {
             <option value="8">Grade 8</option>
           </select>
           {errors.grade ? <p className="form-error">{errors.grade}</p> : null}
+        </div>
+        <div className="form-field">
+          <label className="form-label" htmlFor="reg-access-code">
+            Access code
+          </label>
+
+          <input
+            id="reg-access-code"
+            type="text"
+            autoComplete="off"
+            autoCapitalize="characters"
+            className={
+              errors.accessCode
+                ? "form-input form-input--invalid"
+                : "form-input"
+            }
+            value={form.accessCode}
+            onChange={function (e) {
+              updateField("accessCode", e.target.value);
+            }}
+          />
+
+          <span className="form-hint">
+            Enter the code provided by your teacher.
+          </span>
+
+          {errors.accessCode ? (
+            <p className="form-error">{errors.accessCode}</p>
+          ) : null}
         </div>
 
         <Button type="submit" variant="accent" block disabled={busy}>

@@ -1,11 +1,5 @@
-// Simple service layer.
-// Today everything is mocked with localStorage. Later, each function here will
-// call the real ASP.NET Core Web API (see README.md for the endpoint map).
-
-
-import { filterCards } from "../data/cards.js";
-
-const API_BASE_URL = "http://localhost:5172/api";
+const API_BASE_URL =
+  "https://capsin30-webapi-brgtara8cpbretbs.southafricanorth-01.azurewebsites.net/api";
 const TOKEN_KEY = "caps30_token";
 
 const USERS_KEY = "caps30_users";
@@ -60,9 +54,9 @@ export async function registerUser(details) {
     body: JSON.stringify({
       name: details.name,
       username: details.username,
-      email: details.email,
       password: details.password,
       grade: Number(details.grade),
+      accessCode: details.accessCode,
     }),
   });
 
@@ -72,22 +66,14 @@ export async function registerUser(details) {
     throw new Error(data.message || "Registration failed.");
   }
 
-  if (data.token) {
-    writeJson(TOKEN_KEY, data.token);
-  }
-
-  const user = {
+  return {
     id: data.userId,
     name: data.name,
     username: data.username,
-    email: data.email,
     grade: data.grade,
   };
-
-  writeJson(CURRENT_USER_KEY, user);
-
-  return user;
 }
+
 
 export async function loginUser(username, password) {
   const response = await fetch(`${API_BASE_URL}/auth/login`, {
@@ -101,14 +87,30 @@ export async function loginUser(username, password) {
     }),
   });
 
-  const data = await response.json();
+  // Read the response as text first
+  const responseText = await response.text();
 
+  // Try to parse JSON if the response contains it
+  let data;
+  try {
+    data = responseText ? JSON.parse(responseText) : {};
+  } catch {
+    data = responseText;
+  }
+
+  // Handle unsuccessful responses
   if (!response.ok) {
-    throw new Error(
+    const message =
       typeof data === "string"
         ? data
-        : data.message || "Wrong username or password."
-    );
+        : data.message || data.title || "Wrong username or password.";
+
+    throw new Error(message);
+  }
+
+  // Ensure the successful response contains the expected token
+  if (typeof data !== "object" || !data.token) {
+    throw new Error("Login response did not contain a valid JWT token.");
   }
 
   // Save JWT token
@@ -119,7 +121,6 @@ export async function loginUser(username, password) {
     id: data.userId,
     name: data.name,
     username: username,
-    email: data.email,
     grade: data.grade,
   };
 
@@ -127,6 +128,7 @@ export async function loginUser(username, password) {
 
   return user;
 }
+
 
 export function logoutUser() {
   removeKey(CURRENT_USER_KEY);
@@ -138,6 +140,47 @@ export function logoutUser() {
 export function getCurrentUser() {
   return readJson(CURRENT_USER_KEY, null);
 }
+
+
+export function isTokenExpired() {
+  const token = readJson(TOKEN_KEY, null);
+
+  // No token means the learner is not logged in.
+  if (!token || typeof token !== "string") {
+    return true;
+  }
+
+  try {
+    const parts = token.split(".");
+
+    if (parts.length !== 3) {
+      return true;
+    }
+
+    // Decode the JWT payload.
+    const base64 = parts[1]
+      .replace(/-/g, "+")
+      .replace(/_/g, "/");
+
+    const padded = base64.padEnd(
+      Math.ceil(base64.length / 4) * 4,
+      "="
+    );
+
+    const payload = JSON.parse(atob(padded));
+
+    // A valid JWT should contain an expiry timestamp.
+    if (typeof payload.exp !== "number") {
+      return true;
+    }
+
+    // JWT expiry is measured in seconds; Date.now() is milliseconds.
+    return payload.exp * 1000 <= Date.now();
+  } catch {
+    return true;
+  }
+}
+
 
 // ---------- SOLO QUIZ (future: GET /api/questions) ----------
 const API_URL = "http://localhost:5172";
@@ -270,21 +313,118 @@ export async function addScoreToHistory(entry) {
   return data;
 }
 
-// ---------- TEAM MODE (future: POST /api/team-games) ----------
-export function getTeamCards(grade, subject, topic) {
-  return shuffle(filterCards(Number(grade), subject, topic));
+// ---------- TEAM MODE ----------
+
+export async function getTeamCards(grade, subjectId, categoryId) {
+  const params = new URLSearchParams({
+    grade: Number(grade),
+  });
+
+  if (subjectId) {
+    params.append("subjectId", Number(subjectId));
+  }
+
+  if (categoryId) {
+    params.append("categoryId", Number(categoryId));
+  }
+
+  const response = await fetch(
+    `${API_BASE_URL}/teamcards?${params.toString()}`
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      typeof data === "string"
+        ? data
+        : data.message || "Could not load team cards."
+    );
+  }
+
+  return data;
 }
 
-export function saveTeamGame(game) {
-  writeJson(TEAM_GAME_KEY, game);
+export async function saveTeamGame(game) {
+  const response = await fetch(`${API_BASE_URL}/teamgames`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(game),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      typeof data === "string"
+        ? data
+        : data.message || "Could not save team game."
+    );
+  }
+
+  return data;
 }
 
-export function getTeamGame() {
-  return readJson(TEAM_GAME_KEY, null);
+export async function getTeamGame() {
+  const response = await fetch(`${API_BASE_URL}/teamgames`);
+
+  if (response.status === 404) {
+    return null;
+  }
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      typeof data === "string"
+        ? data
+        : data.message || "Could not load team game."
+    );
+  }
+
+  return data;
 }
 
-export function clearTeamGame() {
-  removeKey(TEAM_GAME_KEY);
+export async function updateTeamGame(id, game) {
+  const response = await fetch(`${API_BASE_URL}/teamgames/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(game),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      typeof data === "string"
+        ? data
+        : data.message || "Could not update team game."
+    );
+  }
+
+  return data;
+}
+
+export async function clearTeamGame(id) {
+  const response = await fetch(`${API_BASE_URL}/teamgames/${id}`, {
+    method: "DELETE",
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      typeof data === "string"
+        ? data
+        : data.message || "Could not delete team game."
+    );
+  }
+
+  return data;
 }
 
 // ---------- helper ----------
