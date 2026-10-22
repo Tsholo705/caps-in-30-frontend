@@ -91,6 +91,8 @@ export default function SoloQuiz() {
     function () {
       if (!ready || questions.length === 0) return undefined;
 
+      if (config && config.seconds === 0) return undefined;
+
       const intervalId = setInterval(function () {
         setSecondsLeft(function (previous) {
           if (previous <= 1) return 0;
@@ -110,7 +112,7 @@ export default function SoloQuiz() {
     function () {
       if (!ready || !config || finishedRef.current) return;
 
-      const timeIsUp = secondsLeft <= 0;
+      const timeIsUp = config.seconds !== 0 && secondsLeft <= 0;
       const allAnswered =
         questions.length > 0 && currentIndex >= questions.length;
 
@@ -259,7 +261,9 @@ export default function SoloQuiz() {
           Question {currentIndex + 1} of {questions.length}
         </span>
 
-        <Timer secondsLeft={secondsLeft} warningAt={10} />
+        {config && config.seconds !== 0 && (
+          <Timer secondsLeft={secondsLeft} warningAt={10} />
+        )}
 
         <span className="quiz-score-pill">Score: {correctCount}</span>
       </div>
