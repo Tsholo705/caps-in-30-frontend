@@ -2,11 +2,12 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../components/Button.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
+import "../styles/passwordToggle.css";
 
 export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
-
+  const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -60,13 +61,24 @@ export default function Login() {
           </label>
           <input
             id="login-password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             className="form-input"
             value={password}
             onChange={function (e) {
               setPassword(e.target.value);
             }}
           />
+          <div className="password-toggle">
+            <input
+              id="show-password"
+              type="checkbox"
+              checked={showPassword}
+              onChange={function (e) {
+                setShowPassword(e.target.checked);
+              }}
+            />
+            <label htmlFor="show-password">Show password</label>
+          </div>
         </div>
 
         <Button type="submit" variant="primary" block disabled={busy}>
