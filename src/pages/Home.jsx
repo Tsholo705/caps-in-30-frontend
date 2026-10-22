@@ -9,7 +9,7 @@ export default function Home() {
       <section className="home-hero">
         <p className="home-hero-kicker">CAPS In 30 Seconds · Can you beat the clock?</p>
         <h1 className="home-hero-title">
-          Just 30 seconds.<span>Can you beat the clock?</span>
+          Think Fast. <span>Learn Smart</span>
         </h1>
         
       </section>
