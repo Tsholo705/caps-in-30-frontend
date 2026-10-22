@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../components/Button.jsx";
+import "../styles/passwordToggle.css";
 import { useAuth } from "../context/AuthContext.jsx";
 
 export default function Register() {
@@ -18,6 +19,8 @@ export default function Register() {
   const [errors, setErrors] = useState({});
   const [banner, setBanner] = useState("");
   const [busy, setBusy] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   function updateField(field, value) {
     setForm(function (previous) {
@@ -122,7 +125,7 @@ export default function Register() {
           </label>
           <input
             id="reg-password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             className={errors.password ? "form-input form-input--invalid" : "form-input"}
             value={form.password}
             onChange={function (e) {
@@ -131,6 +134,39 @@ export default function Register() {
           />
           <span className="form-hint">At least 6 characters.</span>
           {errors.password ? <p className="form-error">{errors.password}</p> : null}
+        </div>
+
+        <div className="form-field">
+          <label className="form-label" htmlFor="reg-confirm-password">
+            Confirm password
+          </label>
+          <input
+            id="reg-confirm-password"
+            type={showPassword ? "text" : "password"}
+            className={errors.confirmPassword || (confirmPassword && form.password !== confirmPassword ? "form-input form-input--invalid" : "form-input")}
+            value={confirmPassword}
+            onChange={function (e) {
+              setConfirmPassword(e.target.value);
+            }}
+          />
+
+          {errors.confirmPassword ? <p className="form-error">{errors.confirmPassword}</p> : null}
+          {confirmPassword && form.password !== confirmPassword ? (
+            <p className="form-error">Passwords do not match.</p>
+          ) : confirmPassword === form.password && confirmPassword ? (
+          <p className="form-hint">Passwords match!</p>
+        ) : null}
+        </div>
+        <div className="password-toggle">
+          <input
+            type="checkbox"
+            id="reg-show-password"
+            checked={showPassword}
+            onChange={function (e) {
+              setShowPassword(e.target.checked);
+            }}
+          />
+          <label htmlFor="reg-show-password">Show passwords</label>
         </div>
 
         <div className="form-field">
