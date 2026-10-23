@@ -43,7 +43,7 @@ export default function Dashboard() {
       if (!subject) return;
 
       api
-        .getCategoriesBySubject(subject.id)
+        .getCategoriesBySubject(subject.id, user.grade)
         .then(function (list) {
           setCategories(list);
           setTopic("All Topics");
@@ -53,7 +53,7 @@ export default function Dashboard() {
           setCategories([]);
         });
     },
-    [subject]
+    [subject, user.grade]
   );
 
   // Send visitors who are not logged in to the login page.
