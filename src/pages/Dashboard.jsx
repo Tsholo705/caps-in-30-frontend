@@ -40,7 +40,7 @@ export default function Dashboard() {
 
   useEffect(
     function () {
-      if (!subject) return;
+      if (!subject || !user) return;
 
       api
         .getCategoriesBySubject(subject.id, user.grade)

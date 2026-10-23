@@ -286,9 +286,13 @@ export async function getSubjects() {
   return data;
 }
 
-export async function getCategoriesBySubject(subjectId) {
+export async function getCategoriesBySubject(subjectId, grade) {
+  const params = new URLSearchParams({
+    grade: Number(grade),
+  });
+
   const response = await fetch(
-    `${API_BASE_URL}/categories/by-subject/${subjectId}`
+    `${API_BASE_URL}/categories/by-subject/${subjectId}?${params.toString()}`
   );
 
   const data = await response.json();
