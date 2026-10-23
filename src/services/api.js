@@ -202,6 +202,58 @@ export async function getQuestions(grade, subject, topic, howMany) {
   return response.json();
 }
 
+
+/* ---------- SPELLING PRACTICE ---------- */
+
+export async function getSpellingWords(
+  grade = 3,
+  subjectId = 7,
+  categoryId = 21
+) {
+  const params = new URLSearchParams({
+    grade: Number(grade),
+    subjectId: Number(subjectId),
+    categoryId: Number(categoryId),
+  });
+
+  const response = await fetch(
+    `${API_BASE_URL}/spellingwords?${params.toString()}`
+  );
+
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(message || "Failed to load spelling practice.");
+  }
+
+  return response.json();
+}
+
+export async function checkSpellingAnswer(id, answer) {
+  const response = await fetch(
+    `${API_BASE_URL}/spellingwords/${id}/check`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ answer }),
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      typeof data === "string"
+        ? data
+        : data.message || data.title || "Failed to check spelling."
+    );
+  }
+
+  return data;
+}
+
+
 export function saveQuizConfig(config) {
   writeJson(QUIZ_CONFIG_KEY, config);
 }
