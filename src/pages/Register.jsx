@@ -41,8 +41,8 @@ export default function Register() {
     if (form.password.length < 6) {
       found.password = "Password must be at least 6 characters.";
     }
-    if (form.grade !== "7" && form.grade !== "8") {
-      found.grade = "Choose Grade 7 or Grade 8.";
+    if (form.grade !== "3" && form.grade !== "7" && form.grade !== "8") {
+      found.grade = "Choose Grade 3, 7 or Grade 8.";
     }
     if (!form.accessCode.trim()) {
       found.accessCode = "Please enter your access code.";
@@ -181,6 +181,7 @@ export default function Register() {
               updateField("grade", e.target.value);
             }}
           >
+            <option value="3">Grade 3</option>
             <option value="7">Grade 7</option>
             <option value="8">Grade 8</option>
           </select>
