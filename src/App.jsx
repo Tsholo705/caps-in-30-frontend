@@ -14,6 +14,7 @@ import TeamSetup from "./pages/TeamSetup.jsx";
 import TeamGame from "./pages/TeamGame.jsx";
 import TeamResults from "./pages/TeamResults.jsx";
 import TeamScoreboard from "./pages/TeamScoreboardPage.jsx";
+import SpellingPractice from "./pages/SpellingPractice.jsx";
 
 function NotFound() {
   return (
@@ -39,8 +40,8 @@ export default function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/score-history" element={<ScoreHistory />} />
               <Route path="/solo-quiz" element={<SoloQuiz />} />
+              <Route path="/spelling-practice" element={<SpellingPractice />} />
               <Route path="/solo-results" element={<SoloResults />} />
-
               <Route path="/team/setup" element={<TeamSetup />} />
               <Route path="/team/game" element={<TeamGame />} />
               <Route path="/team/results" element={<TeamResults />} />

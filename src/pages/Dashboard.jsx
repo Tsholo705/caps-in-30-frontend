@@ -69,6 +69,11 @@ export default function Dashboard() {
   }
 
   function startQuiz() {
+    if (topic === "Phonics and Spelling") {
+      navigate("/spelling-practice");
+      return;
+    }
+
     api.saveQuizConfig({
       grade: user.grade,
       subject: subject.name,

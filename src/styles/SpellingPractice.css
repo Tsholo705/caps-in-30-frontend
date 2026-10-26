@@ -1,0 +1,95 @@
+
+.spelling-page {
+  max-width: 850px;
+  margin: 0 auto;
+}
+
+.spelling-card {
+  margin-top: 24px;
+  padding: 32px;
+  border-radius: 16px;
+  background: var(--card-background, #ffffff);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+}
+
+.spelling-card h1 {
+  margin-top: 0;
+  text-align: center;
+}
+
+.spelling-instructions {
+  margin: 20px 0 28px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.spelling-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.spelling-card label {
+  font-weight: 600;
+}
+
+.spelling-card input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font: inherit;
+}
+
+.spelling-card button,
+.spelling-page > button {
+  padding: 12px 18px;
+  border: none;
+  border-radius: 8px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Purple Check Answer button */
+.spelling-card form button[type="submit"] {
+  background-color: #5b3e86;
+  color: #ffffff;
+}
+
+.spelling-card form button[type="submit"]:hover:not(:disabled) {
+  background-color: #6d28d9;
+}
+
+/* Yellow Next Word button */
+.spelling-card .spelling-next-button {
+  margin-top: 20px;
+  width: 100%;
+  background-color: #ffc700;
+  color: #422006;
+}
+
+.spelling-card .spelling-next-button:hover:not(:disabled) {
+  background-color: #eab308;
+}
+
+.spelling-card button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.spelling-feedback {
+  margin-top: 18px;
+  font-weight: 600;
+  color : #dc2626;
+}
+
+.spelling-correct {
+  color: #15803d;
+}
+
+.spelling-next-button {
+  margin-top: 20px;
+  width: 100%;
+}

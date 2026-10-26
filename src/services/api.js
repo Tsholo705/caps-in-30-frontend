@@ -287,12 +287,9 @@ export async function getSubjects() {
 }
 
 export async function getCategoriesBySubject(subjectId, grade) {
-  const params = new URLSearchParams({
-    grade: Number(grade),
-  });
 
   const response = await fetch(
-    `${API_BASE_URL}/categories/by-subject/${subjectId}?${params.toString()}`
+    `${API_BASE_URL}/categories/by-subject/${subjectId}/grade/${grade}`
   );
 
   const data = await response.json();
