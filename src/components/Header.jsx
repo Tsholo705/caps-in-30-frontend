@@ -27,6 +27,13 @@ export default function Header() {
           {user ? (
             <>
               <Link
+                to="/timetables"
+                className="site-nav-link"
+                activeProps={{ className: "site-nav-link is-active" }}
+              >
+                Timetables
+              </Link>
+              <Link
                 to="/dashboard"
                 className="site-nav-link"
                 activeProps={{ className: "site-nav-link is-active" }}

@@ -43,6 +43,34 @@ function delay(value) {
   });
 }
 
+// ---------- timetable API helper ----------
+async function timetableRequest(path, options = {}) {
+  const token =
+    typeof window !== "undefined"
+      ? window.localStorage.getItem(TOKEN_KEY)
+      : null;
+
+  const response = await fetch(`${API_BASE_URL}/timetables${path}`, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...options.headers,
+    },
+  });
+
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(
+      message || `Timetable request failed (${response.status})`
+    );
+  }
+
+  if (response.status === 204) return null;
+
+  return response.json();
+}
+
 // ---------- AUTH (future: POST /api/auth/register, /api/auth/login) ----------
 export async function registerUser(details) {
   const response = await fetch(`${API_BASE_URL}/auth/register`, {
@@ -475,6 +503,103 @@ export async function clearTeamGame(id) {
   }
 
   return data;
+}
+
+// ---------- STUDY TIMETABLES (ASP.NET Core API) ----------
+
+// Keep this helper for components that calculate progress locally.
+export function buildTimetableProgress(timetable) {
+  const sessions = timetable.sessions || [];
+  const completed = sessions.filter((s) => s.isComplete);
+
+  const sumMinutes = (items) =>
+    items.reduce((sum, s) => sum + (Number(s.minutes) || 0), 0);
+
+  const perSubjectMap = {};
+
+  sessions.forEach((s) => {
+    if (!perSubjectMap[s.subject]) {
+      perSubjectMap[s.subject] = {
+        subject: s.subject,
+        total: 0,
+        completed: 0,
+      };
+    }
+
+    perSubjectMap[s.subject].total++;
+
+    if (s.isComplete) {
+      perSubjectMap[s.subject].completed++;
+    }
+  });
+
+  const perSubject = Object.values(perSubjectMap)
+    .sort((a, b) => a.subject.localeCompare(b.subject))
+    .map((item) => ({
+      ...item,
+      percentage: Math.round((item.completed * 100) / item.total),
+    }));
+
+  return {
+    totalSessions: sessions.length,
+    completedSessions: completed.length,
+    plannedMinutes: sumMinutes(sessions),
+    completedMinutes: sumMinutes(completed),
+    percentage: sessions.length
+      ? Math.round((completed.length * 100) / sessions.length)
+      : 0,
+    perSubject,
+  };
+}
+
+export function getTimetables(userId) {
+  const params = new URLSearchParams({
+    userId: String(userId),
+  });
+
+  return timetableRequest(`?${params.toString()}`);
+}
+
+export function getTimetable(id) {
+  return timetableRequest(`/${id}`);
+}
+
+export function getTimetableProgress(id) {
+  return timetableRequest(`/${id}/progress`);
+}
+
+export function createTimetable(request) {
+  return timetableRequest("", {
+    method: "POST",
+    body: JSON.stringify(request),
+  });
+}
+
+export function updateTimetable(id, request) {
+  return timetableRequest(`/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(request),
+  });
+}
+
+export function deleteTimetable(id) {
+  return timetableRequest(`/${id}`, {
+    method: "DELETE",
+  });
+}
+
+export function updateSessionCompletion(
+  timetableId,
+  sessionId,
+  isComplete
+) {
+  return timetableRequest(
+    `/${timetableId}/sessions/${sessionId}`,
+    {
+      method: "PUT",
+      body: JSON.stringify({ isComplete }),
+    }
+  );
 }
 
 // ---------- helper ----------

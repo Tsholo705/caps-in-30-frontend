@@ -15,6 +15,10 @@ import TeamGame from "./pages/TeamGame.jsx";
 import TeamResults from "./pages/TeamResults.jsx";
 import TeamScoreboard from "./pages/TeamScoreboardPage.jsx";
 import SpellingPractice from "./pages/SpellingPractice.jsx";
+import TimetableBuilder from "./pages/TimetableBuilder.jsx";
+import TimetableGenerator from "./pages/TimetableGenerator.jsx";
+import Timetables from "./pages/Timetables.jsx";
+import TimetableView from "./pages/TimetableView.jsx";
 
 function NotFound() {
   return (
@@ -49,6 +53,12 @@ export default function App() {
                 path="/team/scoreboard"
                 element={<TeamScoreboard />}
               />
+
+              <Route path="/timetables" element={<Timetables />} />
+              <Route path="/timetables/new" element={<TimetableBuilder />} />
+              <Route path="/timetables/generate" element={<TimetableGenerator />} />
+              <Route path="/timetables/:id" element={<TimetableView />} />
+              <Route path="/timetables/:id/edit" element={<TimetableBuilder />} />
 
               <Route path="*" element={<NotFound />} />
             </Routes>
