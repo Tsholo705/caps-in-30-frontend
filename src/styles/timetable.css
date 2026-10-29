@@ -1,0 +1,343 @@
+/* Study Timetable pages: list, builder, generator and the day/week view. */
+
+.timetable-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.timetable-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 1rem;
+}
+
+.timetable-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.timetable-card-title {
+  font-size: 1.15rem;
+  margin: 0;
+}
+
+.timetable-card-description {
+  color: var(--colour-ink-soft);
+  font-size: 0.9rem;
+  margin: 0.3rem 0 0.75rem 0;
+}
+
+.timetable-meta {
+  font-size: 0.8rem;
+  color: var(--colour-ink-soft);
+  margin: 0.5rem 0 0.75rem 0;
+}
+
+.timetable-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* ---------- progress bars ---------- */
+
+.timetable-progress-bar {
+  height: 14px;
+  border: 2px solid var(--colour-ink);
+  border-radius: 999px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.timetable-progress-fill {
+  height: 100%;
+  background: var(--colour-lime);
+  transition: width 0.3s ease;
+}
+
+.timetable-progress-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin: 0.35rem 0 0.75rem 0;
+}
+
+.timetable-subject-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.timetable-subject-row {
+  display: grid;
+  grid-template-columns: minmax(110px, 170px) 1fr 3rem;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.timetable-subject-row strong {
+  font-family: var(--font-display);
+}
+
+/* ---------- view toolbar (Week / Day switch and date stepping) ---------- */
+
+.timetable-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.timetable-view-toggle {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.timetable-view-toggle .option-chip.is-selected {
+  background: var(--colour-purple);
+  color: #fff;
+}
+
+.timetable-day-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.timetable-range-label {
+  font-weight: 800;
+  font-family: var(--font-display);
+}
+
+/* ---------- one study session row ---------- */
+
+.timetable-session-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.timetable-session {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  border: 2px solid var(--colour-ink);
+  border-radius: var(--radius-md);
+  padding: 0.7rem 0.9rem;
+  background: #fff;
+}
+
+.timetable-session--done {
+  background: rgba(20, 46, 30, 0.07);
+}
+
+.timetable-session-tick {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--colour-ink);
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.timetable-session-tick--done {
+  background: var(--colour-lime);
+}
+
+.timetable-session-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.timetable-session-subject {
+  font-weight: 800;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+}
+
+.timetable-session--done .timetable-session-subject {
+  text-decoration: line-through;
+}
+
+.timetable-session-meta {
+  font-size: 0.85rem;
+  color: var(--colour-ink-soft);
+}
+
+.timetable-session-notes {
+  font-size: 0.85rem;
+  margin-top: 0.3rem;
+}
+
+.timetable-session-time-badge {
+  background: var(--colour-lime);
+  border: 2px solid var(--colour-ink);
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  font-weight: 700;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.timetable-session-done-badge {
+  color: var(--colour-success);
+  font-weight: 800;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+/* ---------- week view ---------- */
+
+.timetable-week-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+  gap: 0.75rem;
+}
+
+.timetable-week-day {
+  border: 2px solid var(--colour-ink);
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+  background: #fff;
+  min-height: 130px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.timetable-week-day--today {
+  outline: 3px solid var(--colour-purple);
+  outline-offset: 2px;
+}
+
+.timetable-week-day-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.timetable-week-day-empty {
+  font-size: 0.8rem;
+  color: var(--colour-ink-soft);
+}
+
+.timetable-week-session {
+  font-size: 0.8rem;
+  border-left: 4px solid var(--colour-lime);
+  padding: 0.15rem 0 0.15rem 0.5rem;
+}
+
+.timetable-week-session--done {
+  border-left-color: var(--colour-purple);
+  text-decoration: line-through;
+}
+
+.timetable-open-day {
+  font-size: 0.75rem;
+  font-weight: 800;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--colour-purple);
+  text-align: left;
+  padding: 0;
+  text-transform: uppercase;
+  font-family: var(--font-display);
+}
+
+/* ---------- manual builder ---------- */
+
+.timetable-builder-row {
+  border: 2px solid var(--colour-ink);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  background: #fff;
+}
+
+.timetable-builder-row-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.timetable-builder-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.6rem;
+}
+
+.timetable-builder-grid .form-field {
+  margin-bottom: 0;
+}
+
+.form-field--wide {
+  grid-column: 1 / -1;
+}
+
+/* ---------- generator ---------- */
+
+.timetable-generator-section {
+  margin-bottom: 1.5rem;
+}
+
+.timetable-generator-section h2 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.timetable-generator .option-chip.is-selected {
+  background: var(--colour-purple);
+  color: #fff;
+}
+
+.timetable-topic-group {
+  border: 2px dashed var(--colour-ink-soft);
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.timetable-topic-group h3 {
+  font-size: 0.95rem;
+  margin: 0 0 0.4rem 0;
+}
+
+.timetable-preview-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.9rem;
+}
+
+.timetable-preview-day {
+  font-weight: 800;
+  margin-top: 0.5rem;
+  font-family: var(--font-display);
+}
+
+/* ---------- small screens ---------- */
+
+@media (max-width: 620px) {
+  .timetable-subject-row {
+    grid-template-columns: 1fr 3rem;
+  }
+
+  .timetable-subject-bar {
+    grid-column: 1 / -1;
+  }
+}

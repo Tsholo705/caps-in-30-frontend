@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link,useNavigate, useParams } from "react-router-dom";
 import Button from "../components/Button.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import { toISODate } from "./TimetableBuilder.jsx";
@@ -39,7 +39,8 @@ function sortSessions(sessions) {
 
 // The timetable view: a week overview plus a day view where each study
 // session can be ticked off as it is finished.
-export default function TimetableView({ timetableId }) {
+export default function TimetableView() {
+  const { id: timetableId } = useParams();
   const { user, loading } = useAuth();
   const navigate = useNavigate();
 
@@ -175,8 +176,7 @@ export default function TimetableView({ timetableId }) {
           ) : null}
         </div>
         <Link
-          to="/timetables/$id_/edit"
-          params={{ id_: timetable.id }}
+          to={"/timetables/" + timetable.id + "/edit"}
           className="app-button app-button--accent"
         >
           Edit

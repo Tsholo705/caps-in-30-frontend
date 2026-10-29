@@ -199,7 +199,15 @@ export default function TimetableGenerator() {
         sessions: buildPlan(),
       })
       .then(function (saved) {
-        navigate("/timetables/$id", { params: { id: saved.id } });
+        console.log("Saved timetable response:", saved);
+
+        if (!saved || !saved.id) {
+          setError("Timetable was saved, but its ID was not returned.");
+          setSaving(false);
+          return;
+        }
+
+        navigate("/timetables/" + saved.id);
       })
       .catch(function (saveError) {
         setError(saveError.message);

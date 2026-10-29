@@ -166,7 +166,7 @@ export default function TimetableBuilder({ timetableId }) {
 
     savePromise
       .then(function (saved) {
-        navigate("/timetables/$id", { params: { id: saved.id } });
+        navigate("/timetables/" + saved.id);
       })
       .catch(function (saveError) {
         setError(saveError.message);

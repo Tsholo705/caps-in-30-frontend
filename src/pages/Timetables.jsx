@@ -121,15 +121,13 @@ export default function Timetables() {
 
                 <div className="timetable-card-actions">
                   <Link
-                    to="/timetables/$id"
-                    params={{ id: timetable.id }}
+                    to={"/timetables/" + timetable.id}
                     className="app-button app-button--primary"
                   >
                     Open
                   </Link>
                   <Link
-                    to="/timetables/$id_/edit"
-                    params={{ id: timetable.id }}
+                    to={"/timetables/" + timetable.id + "/edit"}
                     className="app-button app-button--accent"
                   >
                     Edit
