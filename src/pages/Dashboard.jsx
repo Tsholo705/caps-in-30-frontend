@@ -5,7 +5,7 @@ import { useAuth } from "../context/AuthContext.jsx";
 import * as api from "../services/api.js";
 
 const TIMER_CHOICES = [30, 60, 0];
-const QUESTION_COUNTS = [1, 5, 10, 15, 20];
+const QUESTION_COUNTS = [1, 5, 10, 15, 20, 35, 50];
 
 export default function Dashboard() {
   const { user, loading } = useAuth();
