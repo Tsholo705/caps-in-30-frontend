@@ -13,7 +13,7 @@ The application provides learners with an opportunity to practise concepts, test
 
 ### Homepage
 
-![Caps In 30 Seconds Homepage](screenshots/caps-in-30-frontend.vercel.app.png)
+![Caps In 30 Seconds Homepage](screenshots/caps-in-30-frontend.vercel.app_.png)
 
 ### Quiz Configuration
 
