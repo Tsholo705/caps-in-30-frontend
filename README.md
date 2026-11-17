@@ -13,19 +13,24 @@ The application provides learners with an opportunity to practise concepts, test
 
 ### Homepage
 
-![Caps In 30 Seconds Homepage](screenshots/homepage.png)
+![Caps In 30 Seconds Homepage](screenshots/caps-in-30-frontend.vercel.app.png)
 
 ### Quiz Configuration
 
-![Quiz Configuration](screenshots/quiz-configuration.png)
+![Quiz Configuration](screenshots/caps-in-30-frontend.vercel.app_dashboard.png)
 
 ### Solo Quiz Mode
 
-![Solo Quiz](screenshots/solo-quiz.png)
+![Solo Quiz](screenshots/caps-in-30-frontend.vercel.app_solo-quiz.png)
 
-### Team Mode
+### Score History
 
-![Team Mode](screenshots/team-mode.png)
+![Score History](screenshots/caps-in-30-frontend.vercel.app_score-history.png)
+## Live Application
+
+### Timetables
+
+![Timetables](screenshots/caps-in-30-frontend.vercel.app_timetables.png)
 ## Live Application
 
 - **Frontend:** [https://caps-in-30-frontend.vercel.app/](https://caps-in-30-frontend.vercel.app/)
