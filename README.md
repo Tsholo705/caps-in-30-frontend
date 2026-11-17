@@ -9,7 +9,23 @@ Caps In 30 Seconds is a web-based learning application inspired by the South Afr
 The application provides learners with an opportunity to practise concepts, test their knowledge and reinforce their understanding through an interactive learning experience.
 
 **Note:** The application uses curriculum-aligned prototype content and is not an official CAPS assessment platform.
+## Screenshots
 
+### Homepage
+
+![Caps In 30 Seconds Homepage](screenshots/homepage.png)
+
+### Quiz Configuration
+
+![Quiz Configuration](screenshots/quiz-configuration.png)
+
+### Solo Quiz Mode
+
+![Solo Quiz](screenshots/solo-quiz.png)
+
+### Team Mode
+
+![Team Mode](screenshots/team-mode.png)
 ## Live Application
 
 - **Frontend:** [https://caps-in-30-frontend.vercel.app/](https://caps-in-30-frontend.vercel.app/)
