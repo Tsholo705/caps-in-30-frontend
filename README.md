@@ -34,6 +34,9 @@ The application provides learners with an opportunity to practise concepts, test
 ## Live Application
 
 - **Frontend:** [https://caps-in-30-frontend.vercel.app/](https://caps-in-30-frontend.vercel.app/)
+- **Demo Login**:
+      • Username: learner
+      • Password: learner12345
 - **Backend API:** https://capsin30-webapi-brgtara8cpbretbs.southafricanorth-01.azurewebsites.net/swagger
 - **Backend Repository:** [https://github.com/Tsholo705/caps-in-30.Api.git](https://github.com/Tsholo705/caps-in-30.Api.git)
 
